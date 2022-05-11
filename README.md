@@ -47,13 +47,13 @@ func main() {
 	if warn != "" {
 		fmt.Printf("warn:\n%s", warn)
 	}
-	
+
 	//获取错误信息
 	err := runResult.ErrOut
 	if err != nil {
 		log.Fatal("error: ", err)
 	}
-	
+
 	//获取运行的xml结果
 	result := runResult.Result
 
@@ -74,6 +74,7 @@ func main() {
 ```
 
 ### 直接解析xml结果
+
 ```go
 package main
 
@@ -103,11 +104,16 @@ func main() {
 	//导出xml结果到Excel
 	scanner.ExportResult(xmlResult)
 
-   //导出xml结果到txt，用于导入魔方
-   scanner.ExportTxtResult(xmlResult)
+	//导出xml结果到Excel
+	scanner.ExportResult(xmlResult)
+
+	//导出xml结果到txt，用于导入魔方
+	scanner.ExportTxtResult(xmlResult)
 }
 ```
+
 执行上面代码的结果输出
+
 ```
 hosthint:
 66.35.250.168 up freshmeat.net 
@@ -129,12 +135,12 @@ host and port:
 	443/tcp      	open      	http                	lighttpd 1.4.18                   	[]	10	syn-ack			SSLv2server still supports SSLv2	SSL2_DES_192_EDE3_CBC_WITH_MD5	SSL2_RC2_CBC_128_CBC_WITH_MD5	SSL2_RC4_128_WITH_MD5	SSL2_RC4_64_WITH_MD5	SSL2_DES_64_CBC_WITH_MD5	SSL2_RC2_CBC_128_CBC_WITH_MD5	SSL2_RC4_128_EXPORT40_WITH_MD5 &&&& HTML titleSite doesn't have a title.			
 ...省略了部分
 ```
+
 Excel结果
 ![hosthint](examples/parsewithfile/sheet1.png)
 ![hostandport](examples/parsewithfile/sheet2.png)
 
 更多例子可参考`examples`目录下的代码
-
 
 ## 其他
 
