@@ -64,5 +64,5 @@ func main() {
 	}
 
 	//导出xml结果到Excel
-	scanner.ExportResult(xmlResult, resultName)
+	scanner.ExportResult(xmlResult)
 }

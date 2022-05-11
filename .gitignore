@@ -119,3 +119,5 @@ Temporary Items
 
 .idea
 *.iml
+*.txt
+*.xlsx

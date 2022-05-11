@@ -18,6 +18,7 @@ nmap-go 基于golang的nmap调用库
 8. 可直接解析xml到Excel（examples/parsewithfile）
 9. 包含所有选项的测试案例（nmap/nmap_test.go）
 10. 支持生成可执行文件，用于将nmap xml结果解析成Excel（examples/parsexmlresult/main.go）
+11. 支持将nmap xml结果导出成txt，用于导入魔方
 
 ## 例子
 
@@ -67,7 +68,7 @@ func main() {
 	scanner.PrettyResult(xmlResult)
 
 	//导出xml结果到Excel
-	scanner.ExportResult(xmlResult, "Result")
+	scanner.ExportResult(xmlResult)
 }
 
 ```
@@ -100,7 +101,10 @@ func main() {
 	scanner.PrettyResult(xmlResult)
 
 	//导出xml结果到Excel
-	scanner.ExportResult(xmlResult, "Result")
+	scanner.ExportResult(xmlResult)
+
+   //导出xml结果到txt，用于导入魔方
+   scanner.ExportTxtResult(xmlResult)
 }
 ```
 执行上面代码的结果输出

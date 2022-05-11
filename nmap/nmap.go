@@ -1,12 +1,14 @@
 package nmap
 
 import (
+	"bufio"
 	"bytes"
 	"context"
 	"encoding/xml"
 	"fmt"
 	"github.com/pkg/errors"
 	"github.com/xuri/excelize/v2"
+	"io/ioutil"
 	"log"
 	"os"
 	"os/exec"
@@ -85,6 +87,17 @@ func (receiver *nmap) Run(pctx ...context.Context) *nmap {
 		}
 		if len(outStr) != 0 {
 			receiver.Result = outStr
+			if receiver.exportOption.SaveXmlRaw {
+				var resultName = receiver.exportOption.ResultName
+				if receiver.outputType == "" {
+					resultName = receiver.exportOption.ResultName + ".xml"
+				}
+				content := []byte(receiver.Result)
+				err := ioutil.WriteFile(resultName, content, 0644)
+				if err != nil {
+					receiver.ErrOut = err
+				}
+			}
 			return receiver
 		}
 	}
@@ -202,8 +215,8 @@ func (receiver *nmap) ParseXmlResult(result any) any {
 }
 
 // ExportResult 解析xml结果到Excel文件中
-func (receiver *nmap) ExportResult(result *NmapXMLResult, fileName string) {
-	target := fileName + ".xlsx"
+func (receiver *nmap) ExportResult(result *NmapXMLResult) {
+	target := receiver.exportOption.ResultName + ".xlsx"
 	_, err := os.Stat(target)
 	if err == nil {
 		os.Remove(target)
@@ -389,6 +402,42 @@ func (receiver *nmap) ExportResult(result *NmapXMLResult, fileName string) {
 	}
 }
 
+//ExportTxtResult 导出成txt格式，用于导入魔方资产
+func (receiver *nmap) ExportTxtResult(result *NmapXMLResult) {
+	target := receiver.exportOption.ResultName + ".txt"
+	_, err := os.Stat(target)
+	if err == nil {
+		os.Remove(target)
+	}
+	file, err := os.Create(target)
+	if err != nil {
+		panic(err)
+	}
+	defer file.Close()
+	writer := bufio.NewWriter(file)
+	for _, host := range result.Host {
+		for _, addr := range host.Address {
+			//fmt.Print(addr.Addr + "[")
+			for _, ports := range host.Ports {
+				for _, port := range ports.Port {
+					var out []any
+					var version = port.Service.Product + port.Service.Version
+					if port.Service.Product == "" {
+						version = "null"
+					}
+					out = append(out, fmt.Sprintf("%d,%s,%s,%s,%s", port.PortId, port.Protocol, port.State.State, port.Service.Name, version))
+					result := fmt.Sprintf("%s,", out)
+					result = strings.TrimRight(result, ",")
+					fmt.Fprintln(writer, addr.Addr+"["+result+"]")
+				}
+
+			}
+
+		}
+		writer.Flush()
+	}
+}
+
 func NewNmap(cfg ...*config) *nmap {
 	n := &nmap{}
 	// export nmap
@@ -414,7 +463,14 @@ func checkOption(opt []*config) *config {
 	opLen := len(opt)
 	switch opLen {
 	case 0:
-		option = &config{ShowHosthint: true, ShowHostPort: true, MergeRow: true, AddTable: true}
+		option = &config{
+			ResultName:   "Result",
+			ShowHosthint: true,
+			ShowHostPort: true,
+			MergeRow:     true,
+			AddTable:     true,
+			SaveXmlRaw:   true,
+		}
 	case 1:
 		option = opt[0]
 	default:
