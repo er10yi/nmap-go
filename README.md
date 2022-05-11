@@ -68,7 +68,7 @@ func main() {
 	scanner.PrettyResult(xmlResult)
 
 	//导出xml结果到Excel
-	scanner.ExportResult(xmlResult)
+	scanner.ExportTxtResult(xmlResult)
 }
 
 ```
