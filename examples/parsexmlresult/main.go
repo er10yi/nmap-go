@@ -65,4 +65,7 @@ func main() {
 
 	//导出xml结果到Excel
 	scanner.ExportResult(xmlResult)
+
+	//导出xml结果到txt，用于导入魔方
+	scanner.ExportTxtResult(xmlResult)
 }
