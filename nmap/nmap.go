@@ -417,7 +417,7 @@ func (receiver *nmap) ExportTxtResult(result *NmapXMLResult) {
 	writer := bufio.NewWriter(file)
 	for _, host := range result.Host {
 		for _, addr := range host.Address {
-			//fmt.Print(addr.Addr + "[")
+			var outTotal []string
 			for _, ports := range host.Ports {
 				for _, port := range ports.Port {
 					var out []any
@@ -428,11 +428,15 @@ func (receiver *nmap) ExportTxtResult(result *NmapXMLResult) {
 					out = append(out, fmt.Sprintf("%d,%s,%s,%s,%s", port.PortId, port.Protocol, port.State.State, port.Service.Name, version))
 					result := fmt.Sprintf("%s,", out)
 					result = strings.TrimRight(result, ",")
-					fmt.Fprintln(writer, addr.Addr+"["+result+"]")
+					outTotal = append(outTotal, result)
 				}
-
 			}
-
+			var total = addr.Addr
+			if len(outTotal) != 0 {
+				strResult := strings.Join(outTotal, ",")
+				total += "[" + strResult + "]"
+			}
+			fmt.Fprintln(writer, total)
 		}
 		writer.Flush()
 	}
