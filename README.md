@@ -67,11 +67,11 @@ func main() {
 	//格式化输出xml结果
 	scanner.PrettyResult(xmlResult)
 
-   //导出xml结果到Excel
-   scanner.ExportResult(xmlResult)
+	//导出xml结果到Excel
+	scanner.ExportResult(xmlResult)
 
-   //导出xml结果到txt，用于导入魔方
-   scanner.ExportTxtResult(xmlResult)
+	//导出xml结果到txt，用于导入魔方
+	scanner.ExportTxtResult(xmlResult)
 }
 
 ```
