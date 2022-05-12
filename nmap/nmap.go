@@ -364,7 +364,7 @@ func (receiver *nmap) ExportResult(result *NmapXMLResult) {
 	}
 
 	if receiver.exportOption.MergeRow {
-		start := 2
+		start := 1
 		end := 0
 		for _, v := range mergeSlice {
 			end = v
