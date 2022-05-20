@@ -364,9 +364,12 @@ func (receiver *nmap) ExportResult(result *NmapXMLResult) {
 	}
 
 	if receiver.exportOption.MergeRow {
-		start := 1
+		start := 2
 		end := 0
 		for _, v := range mergeSlice {
+			if v < start {
+				continue
+			}
 			end = v
 			streamWriter2.MergeCell("A"+strconv.Itoa(start), "A"+strconv.Itoa(end))
 			streamWriter2.MergeCell("B"+strconv.Itoa(start), "B"+strconv.Itoa(end))
